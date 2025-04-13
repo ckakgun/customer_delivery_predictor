@@ -36,6 +36,7 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
+
 # Unit test / coverage reports
 htmlcov/
 .tox/
@@ -81,6 +82,7 @@ target/
 # IPython
 profile_default/
 ipython_config.py
+
 
 # pyenv
 #   For a library or package, you might want to ignore these files since the code is
@@ -135,6 +137,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+artifacts/
 
 # Spyder project settings
 .spyderproject
