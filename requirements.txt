@@ -6,7 +6,7 @@ matplotlib>=3.8.0
 seaborn>=0.13.0
 python-dotenv>=1.0.0
 geopy>=2.4.0
-lightgbm>=4.0.0
+lightgbm==4.6.0
 gradient-boosting-regressor>=1.0.0
 #-e .
 
