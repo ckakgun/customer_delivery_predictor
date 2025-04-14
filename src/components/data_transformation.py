@@ -29,9 +29,9 @@ class DataTransformation:
         """
         try:
             numerical_columns = [
-               'Delivery_person_Age',
-    'Delivery_person_Ratings',
-    'Vehicle_condition',
+                'Delivery_person_Age',
+                'Delivery_person_Ratings',
+                'Vehicle_condition',
                 'distance',
                 'Order_day',
                 'Order_month',
@@ -39,7 +39,7 @@ class DataTransformation:
                 'multiple_deliveries'
             ]
             categorical_columns = [
-                'Weather_Conditions',
+                'Weatherconditions',
                 'Road_traffic_density',
                 'Type_of_order',
                 'Type_of_vehicle',
@@ -88,7 +88,7 @@ class DataTransformation:
 
             # Process date columns
             def process_date(df):
-                df['Order_Date'] = pd.to_datetime(df['Order_Date'])
+                df['Order_Date'] = pd.to_datetime(df['Order_Date'], dayfirst=True)
                 df['Order_day'] = df['Order_Date'].dt.day
                 df['Order_month'] = df['Order_Date'].dt.month
                 df['Order_year'] = df['Order_Date'].dt.year
