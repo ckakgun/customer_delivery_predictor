@@ -117,6 +117,10 @@ class DataTransformation:
 
             target_column_name = "Time_taken(min)"
             
+            # Clean target values by removing '(min)' and converting to float
+            train_df[target_column_name] = train_df[target_column_name].str.replace('(min)', '').astype(float)
+            test_df[target_column_name] = test_df[target_column_name].str.replace('(min)', '').astype(float)
+            
             input_feature_train_df = train_df.drop(columns=[target_column_name], axis=1)
             target_feature_train_df = train_df[target_column_name]
 
@@ -152,6 +156,3 @@ class DataTransformation:
             
         except Exception as e:
             raise CustomException(e, sys) from e
-
-
-

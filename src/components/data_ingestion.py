@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 from src.exception import CustomException
 from src.logger import logging
 from src.components.data_transformation import DataTransformation
-
+from src.components.model_trainer import ModelTrainer
 
 @dataclass
 class DataIngestionConfig:
@@ -22,7 +22,7 @@ class DataIngestion:
     """Class for data ingestion operations."""
     def __init__(self):
         self.ingestion_config = DataIngestionConfig()
-    #data ingestion
+
     def initiate_data_ingestion(self):
         """Ingests data from source, splits it into train and test sets, and saves them as CSV files."""
         logging.info("Entered the data ingestion method or component")
@@ -39,7 +39,7 @@ class DataIngestion:
             test_set.to_csv(self.ingestion_config.test_data_path, index=False, header=True)
 
             logging.info("Ingestion of the data is completed")
-            
+           
             return(
                 self.ingestion_config.train_data_path,
                 self.ingestion_config.test_data_path
@@ -54,6 +54,9 @@ if __name__ == "__main__":
 
     data_transformation = DataTransformation()
     train_arr, test_arr, _ = data_transformation.initiate_data_transformation(train_data, test_data)
+
+    model_trainer = ModelTrainer()
+    print(model_trainer.initiate_model_trainer(train_arr, test_arr))
 
 
 
