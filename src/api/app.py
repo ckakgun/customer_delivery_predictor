@@ -1,8 +1,13 @@
 from typing import Optional
 import logging
-
-from fastapi import FastAPI, HTTPException
+import time
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from pydantic import BaseModel
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from src.pipeline.predict_pipeline import PredictPipeline, CustomData
 from ..logger import setup_logger
@@ -11,11 +16,40 @@ from ..logger import setup_logger
 setup_logger()
 logger = logging.getLogger(__name__)
 
+# Rate limiter setup
+limiter = Limiter(key_func=get_remote_address)
+
 app = FastAPI(
     title="Delivery Time Prediction API",
     description="API for predicting food delivery times",
     version="1.0.0"
 )
+
+# Add rate limiter
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# Security middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.add_middleware(
+    TrustedHostMiddleware, 
+    allowed_hosts=["*"]  # In production, replace with your domain
+)
+
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    return response
 
 class DeliveryInput(BaseModel):
     """
@@ -44,14 +78,16 @@ class PredictionResponse(BaseModel):
     confidence: Optional[float] = None
 
 @app.get("/")
-async def root():
+@limiter.limit("10/minute")
+async def root(request: Request):
     """
     Returns a message indicating that the API is running.
     """
     return {"message": "Delivery Time Prediction API"}
 
 @app.post("/predict", response_model=PredictionResponse)
-async def predict_delivery_time(input_data: DeliveryInput):
+@limiter.limit("5/minute")
+async def predict_delivery_time(request: Request, input_data: DeliveryInput):
     """
     Predicts the delivery time for a given input data.
     """
@@ -87,7 +123,7 @@ async def predict_delivery_time(input_data: DeliveryInput):
         
         return PredictionResponse(
             predicted_delivery_time=float(prediction[0]),
-            confidence=0.95  # Example confidence score
+            confidence=0.95
         )
 
     except Exception as e:

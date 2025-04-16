@@ -9,8 +9,9 @@ pytest==7.4.3
 httpx==0.25.1
 pandas==2.1.0
 catboost==1.2.8
-python-multipart==0.0.6
+python-multipart>=0.0.7
 geopy==2.4.1
 dill==0.3.7
 xgboost==2.0.3
+slowapi==0.1.8
 
