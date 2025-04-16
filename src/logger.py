@@ -8,11 +8,11 @@ os.makedirs(logs_dir, exist_ok=True)
 
 LOG_FILE_PATH = os.path.join(logs_dir, LOG_FILE)
 
-logging.basicConfig(
-    filename=LOG_FILE_PATH,
-    format="[ %(asctime)s ] %(lineno)d %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
-)
+def setup_logger():
+    logging.basicConfig(
+        level=os.getenv("LOG_LEVEL", "INFO"),
+        format=os.getenv("LOG_FORMAT", "%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    )
 
 if __name__ == "__main__":
     logging.info("Logging has started")
