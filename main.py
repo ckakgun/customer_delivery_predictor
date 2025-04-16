@@ -43,6 +43,9 @@ except Exception as e:
     raise
 
 class DeliveryFeatures(BaseModel):
+    """
+    Represents the features required for predicting delivery time.
+    """
     customer_latitude: float
     customer_longitude: float
     restaurant_latitude: float
