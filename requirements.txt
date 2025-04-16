@@ -11,6 +11,6 @@ pandas==2.1.0
 catboost==1.2.8
 python-multipart==0.0.6
 geopy==2.4.1
-xgboost==1.7.0
 dill==0.3.7
+xgboost==2.0.3
 
