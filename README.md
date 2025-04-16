@@ -1,4 +1,4 @@
-# End to end customer delivery time predictor
+# End to end ML project
 
 # Customer Delivery Time Prediction
 
